@@ -55,10 +55,8 @@ public class Profile extends Fragment {
                 if (resultCode == RESULT_OK) {
                     try {
                         final Uri imageUri = data.getData();
-                        final InputStream imageStream = getContext().getContentResolver().openInputStream(imageUri);
-                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        circleImageView.setImageBitmap(selectedImage);
-                    } catch (FileNotFoundException e) {
+                        circleImageView.setImageURI(imageUri);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
