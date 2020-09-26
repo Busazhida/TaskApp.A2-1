@@ -9,6 +9,7 @@
 
     <EditText
         android:id="@+id/editText"
+        android:hint="Введите ваши данные"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textCapSentences"

@@ -8,12 +8,19 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.taskapp.R;
+import com.example.taskapp.models.Task;
+import com.example.taskapp.ui.home.TaskAdapter;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class FormFragment extends Fragment {
     EditText editText;
@@ -29,16 +36,30 @@ public class FormFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         editText = view.findViewById(R.id.editText);
+        if (getArguments() != null) {
+            Task task = (Task) getArguments().getSerializable("task");
+            editText.setText(task.getTitle());
+        }
         view.findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 save();
             }
         });
+
     }
 
     private void save() {
-        String text = editText.getText().toString();
+        String title = editText.getText().toString();
+        Task task = new Task(title, System.currentTimeMillis());
+        Bundle bundle = new Bundle();
+        if (getArguments() != null) {
+            bundle.putSerializable("update", task);
+            getParentFragmentManager().setFragmentResult("updateform", bundle);
+        } else {
+            bundle.putSerializable("task", task);
+            getParentFragmentManager().setFragmentResult("form", bundle);
+        }
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         navController.navigateUp();
     }
