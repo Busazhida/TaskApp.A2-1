@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initNavcontroller();
-
+        if (!new Prefs(this).getShowState())
         navController.navigate(R.id.boardFragment);
 
     }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.taskapp.Prefs;
 import com.example.taskapp.R;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
@@ -45,6 +46,7 @@ public class BoardFragment extends Fragment {
         adapter.setOnStartClickListener(new BoardAdapter.OnStartClickListener() {
             @Override
             public void onStart() {
+                new Prefs(requireContext()).saveShowState();
                 navController.popBackStack();
             }
         });
