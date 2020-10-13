@@ -9,11 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.taskapp.App;
 import com.example.taskapp.R;
 import com.example.taskapp.models.Task;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
@@ -21,9 +23,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private int position = 0;
     private ItemClickListener listener;
 
-    public TaskAdapter(List<Task> list, ItemClickListener listener) {
+
+    public TaskAdapter(List<Task> list) {
         this.list = list;
-        this.listener = listener;
     }
 
     @NonNull
@@ -49,19 +51,44 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void deleteItem(int position) {
+        Task task = list.get(position);
+        App.instance.getAppDatabase().taskDao().delete(task);
+        list.remove(task);
+        notifyItemRemoved(position);
+    }
+
     @Override
     public int getItemCount() {
         return list.size();
     }
 
-    public void setItem(Task task) {
+    public void addItem(Task task) {
 
         list.add(0, task);
-        notifyItemChanged(0);
+        notifyItemInserted(0);
     }
 
+    public void setList(List<Task> list) {
+        this.list.addAll(list);
+        notifyDataSetChanged();
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    }
+
+    public void setListener(ItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public Task getItem(int position) {
+        return list.get(position);
+    }
+
+    public void setNewList(ArrayList<Task> list) {
+        this.list.retainAll(list);
+        notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textTitle;
         private TextView time;
 
@@ -69,7 +96,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitle);
             time = itemView.findViewById(R.id.time);
-            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(getAdapterPosition());
+                    notifyItemChanged(position);
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    listener.onLongClick(getAdapterPosition());
+                    return true;
+                }
+            });
         }
 
         public void bind(Task task) {
@@ -81,15 +121,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             DateFormat data = new SimpleDateFormat("HH:mm,  d MMMM yyyy ");
             return data.format(date);
         }
-
-        @Override
-        public void onClick(View view) {
-            position = getAdapterPosition();
-            listener.onItemClick(position);
-        }
     }
 
     public interface ItemClickListener {
         void onItemClick(int position);
+
+        void onLongClick(int position);
     }
 }

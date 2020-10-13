@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.taskapp.App;
 import com.example.taskapp.R;
 import com.example.taskapp.models.Task;
 import com.example.taskapp.ui.home.TaskAdapter;
@@ -50,8 +51,10 @@ public class FormFragment extends Fragment {
     private void save() {
         String title = editText.getText().toString();
         Task task = new Task(title, System.currentTimeMillis());
+        App.instance.getAppDatabase().taskDao().insert(task);
         Bundle bundle = new Bundle();
         if (getArguments() != null) {
+
             bundle.putSerializable("update", task);
             getParentFragmentManager().setFragmentResult("updateform", bundle);
         } else {

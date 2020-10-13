@@ -46,7 +46,7 @@ public class BoardFragment extends Fragment {
         adapter.setOnStartClickListener(new BoardAdapter.OnStartClickListener() {
             @Override
             public void onStart() {
-                new Prefs(requireContext()).saveShowState();
+                Prefs.instance.saveShowState();
                 navController.popBackStack();
             }
         });

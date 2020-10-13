@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">TaskApp</string>
     <string name="title_home">Main</string>
+    <string name="title_trash">Delete</string>
+    <string name="title_sort">Sort</string>
     <string name="title_dashboard">Messages</string>
     <string name="title_notifications">Saved</string>
     <string name="title_profile">Profile</string>

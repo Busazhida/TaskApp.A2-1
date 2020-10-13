@@ -6,8 +6,11 @@ import android.content.SharedPreferences;
 public class Prefs  {
 
     private SharedPreferences preferences;
+    public static Prefs instance;
+
 
     public Prefs(Context context) {
+        instance = this;
         preferences = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
     }
 
